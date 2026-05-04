@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main/index.css">
+    <link rel="stylesheet" href="css/main/profile.css">
+    <link rel="stylesheet" href="css/header.css">
+    <script defer src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <script defer src="js/header.js"></script>
+    <title>Админ-панель</title>
+    <script>
+        // Определяем API_BASE_URL
+        window.API_BASE_URL = window.location.origin + '/api/v1';
+    </script>
+    <style>
+        .admin-container {
+            padding: 120px 12%;
+            color: var(--text-color);
+        }
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .admin-header h1 {
+            font-size: 48px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .session-info {
+            font-size: 14px;
+            color: var(--text-desc);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: rgba(20, 20, 20, 0.35);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-desc);
+        }
+        .admin-section {
+            background: rgba(20, 20, 20, 0.35);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 24px;
+        }
+        .admin-section h2 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: var(--text-other-color);
+            margin-bottom: 8px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        .btn {
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .keys-output, .promocodes-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .key-item, .promo-item {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+        .promo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .promo-info {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .users-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .user-item {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .user-email {
+            font-size: 14px;
+            color: var(--text-desc);
+        }
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .user-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .user-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .user-field label {
+            font-size: 12px;
+            color: var(--text-desc);
+        }
+        .user-field input, .user-field select {
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🔐 Админ-панель</h1>
+            <p class="session-info">Сессия: <span id="sessionUrl"></span></p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statUsers">0</div>
+                <div class="stat-label">Пользователей</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statKeys">0</div>
+                <div class="stat-label">Неиспользованных ключей</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statInvoices">0</div>
+                <div class="stat-label">Оплаченных заказов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statRevenue">0₽</div>
+                <div class="stat-label">Общий доход</div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Генерация ключей активации</h2>
+            <div class="form-group">
+                <label>Роль</label>
+                <select id="keyRole">
+                    <option value="beta">Beta</option>
+                    <option value="alpha">Alpha</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="cracker">Cracker</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Количество</label>
+                <input type="number" id="keyCount" value="1" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>Длительность (дней)</label>
+                <input type="number" id="keyDuration" value="30" min="1">
+            </div>
+            <button class="btn" onclick="generateKeys()">Сгенерировать ключи</button>
+            <div class="keys-output" id="keysOutput" style="display: none;"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Создание промокода</h2>
+            <div class="form-group">
+                <label>Код промокода</label>
+                <input type="text" id="promoCode" placeholder="SALE50">
+            </div>
+            <div class="form-group">
+                <label>Скидка (%)</label>
+                <input type="number" id="promoDiscount" value="10" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>Макс. использований (0 = безлимит)</label>
+                <input type="number" id="promoMaxUses" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Срок действия (необязательно)</label>
+                <input type="datetime-local" id="promoExpires">
+            </div>
+            <button class="btn" onclick="createPromocode()">Создать промокод</button>
+        </div>
+
+        <div class="admin-section">
+            <h2>Активные промокоды</h2>
+            <div class="promocodes-list" id="promocodesList"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2>Управление пользователями</h2>
+            <div class="users-list" id="usersList"></div>
+        </div>
+    </div>
+
+    <script>
+        const sessionUrl = window.location.pathname.replace('.html', '').substring(1);
+        document.getElementById('sessionUrl').textContent = sessionUrl;
+
+        // Загрузка статистики
+        async function loadStats() {
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/stats/${sessionUrl}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('statUsers').textContent = data.users;
+                    document.getElementById('statKeys').textContent = data.unusedKeys;
+                    document.getElementById('statInvoices').textContent = data.paidInvoices;
+                    document.getElementById('statRevenue').textContent = (data.totalRevenue * 100).toFixed(0) + '₽';
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Генерация ключей
+        async function generateKeys() {
+            const role = document.getElementById('keyRole').value;
+            const count = document.getElementById('keyCount').value;
+            const duration = document.getElementById('keyDuration').value;
+
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/generate-keys`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionUrl, role, count, durationDays: duration })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    const output = document.getElementById('keysOutput');
+                    output.style.display = 'block';
+                    output.innerHTML = data.keys.map(key => 
+                        `<div class="key-item">${key}</div>`
+                    ).join('');
+                    
+                    if (window.__toast) {
+                        window.__toast(`Сгенерировано ${data.keys.length} ключей`, 'success');
+                    }
+                    loadStats();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                if (window.__toast) {
+                    window.__toast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+            }
+        }
+
+        // Создание промокода
+        async function createPromocode() {
+            const code = document.getElementById('promoCode').value.trim();
+            const discount = document.getElementById('promoDiscount').value;
+            const maxUses = document.getElementById('promoMaxUses').value;
+            const expires = document.getElementById('promoExpires').value;
+
+            if (!code) {
+                alert('Введите код промокода');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/create-promocode`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sessionUrl,
+                        code,
+                        discountPercent: discount,
+                        maxUses,
+                        expiresAt: expires || null
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    if (window.__toast) {
+                        window.__toast(`Промокод ${data.code} создан`, 'success');
+                    }
+                    document.getElementById('promoCode').value = '';
+                    loadPromocodes();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                if (window.__toast) {
+                    window.__toast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+            }
+        }
+
+        // Загрузка промокодов
+        async function loadPromocodes() {
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/promocodes/${sessionUrl}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const list = document.getElementById('promocodesList');
+                    list.innerHTML = data.promocodes.map(promo => `
+                        <div class="promo-item">
+                            <strong>${promo.code}</strong>
+                            <div class="promo-info">
+                                <span>-${promo.discount_percent}%</span>
+                                <span>${promo.used_count}/${promo.max_uses || '∞'}</span>
+                                <span>${promo.active ? '✅' : '❌'}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading promocodes:', error);
+            }
+        }
+
+        // Загрузка пользователей
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/users/${sessionUrl}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const list = document.getElementById('usersList');
+                    list.innerHTML = data.users.map(user => `
+                        <div class="user-item">
+                            <div class="user-header">
+                                <div class="user-info">
+                                    <div class="user-name">${user.login} ${user.banned ? '🚫' : ''}</div>
+                                    <div class="user-email">${user.email}</div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn btn-small" onclick="saveUser(${user.id})">Сохранить</button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id}, '${user.login}')">Удалить</button>
+                                </div>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-field">
+                                    <label>Роль</label>
+                                    <select id="role-${user.id}">
+                                        <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+                                        <option value="beta" ${user.role === 'beta' ? 'selected' : ''}>Beta</option>
+                                        <option value="alpha" ${user.role === 'alpha' ? 'selected' : ''}>Alpha</option>
+                                        <option value="youtube" ${user.role === 'youtube' ? 'selected' : ''}>YouTube</option>
+                                        <option value="cracker" ${user.role === 'cracker' ? 'selected' : ''}>Cracker</option>
+                                        <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                                    </select>
+                                </div>
+                                <div class="user-field">
+                                    <label>Подписка до</label>
+                                    <input type="date" id="sub-${user.id}" value="${user.sub_until || ''}">
+                                </div>
+                                <div class="user-field">
+                                    <label>Забанен</label>
+                                    <select id="banned-${user.id}">
+                                        <option value="0" ${!user.banned ? 'selected' : ''}>Нет</option>
+                                        <option value="1" ${user.banned ? 'selected' : ''}>Да</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Сохранение пользователя
+        async function saveUser(userId) {
+            const role = document.getElementById(`role-${userId}`).value;
+            const subUntil = document.getElementById(`sub-${userId}`).value;
+            const banned = document.getElementById(`banned-${userId}`).value;
+
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/update-user`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionUrl, userId, role, subUntil, banned: banned === '1' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    if (window.__toast) {
+                        window.__toast('Пользователь обновлен', 'success');
+                    }
+                    loadUsers();
+                    loadStats();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                if (window.__toast) {
+                    window.__toast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+            }
+        }
+
+        // Удаление пользователя
+        async function deleteUser(userId, login) {
+            if (!confirm(`Удалить пользователя ${login}?`)) return;
+
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/admin/delete-user`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionUrl, userId })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    if (window.__toast) {
+                        window.__toast('Пользователь удален', 'success');
+                    }
+                    loadUsers();
+                    loadStats();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                if (window.__toast) {
+                    window.__toast(error.message, 'error');
+                } else {
+                    alert(error.message);
+                }
+            }
+        }
+
+        // Инициализация
+        loadStats();
+        loadPromocodes();
+        loadUsers();
+        setInterval(loadStats, 30000); // Обновляем статистику каждые 30 секунд
+    </script>
+</body>
+</html>

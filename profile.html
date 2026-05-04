@@ -1,0 +1,467 @@
+<html lang="ru">
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="preload" href="/img/logo.png" as="image" fetchpriority="high">
+    <link rel="preload" href="/img/Фон 2.svg" as="image">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/main/profile.css" data-critical>
+    <link rel="stylesheet" href="/css/header.css" data-critical>
+    <link rel="stylesheet" href="/css/profile_adaptive.css" data-async data-original-media="all" media="print" onload="this.onload=null;this.media='all'">
+    <link rel="stylesheet" href="/css/footer.css" data-async data-original-media="all" media="print" onload="this.onload=null;this.media='all'">
+
+    <!-- Phosphor Icons -->
+    <script defer src="/js/perfomance.js"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <script defer src="/js/profile-anim.js"></script>
+    <script src="/js/auth.js"></script>
+    <script defer src="/js/auth-check.js"></script>
+    <script defer src="/js/header.js"></script>
+    <script defer src="/js/profile.js"></script>
+
+    <!-- Title -->
+    <title>@batareikasource</title>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="logo">
+        <a href="/" class="logo-text">
+            <img src="/img/logo.png" alt="" data-lazy="false" fetchpriority="high">Rockstar
+        </a>
+    </div>
+
+    <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/purchase">Покупка</a></li>
+        <li><a href="/faq">FAQ</a></li>
+    </ul>
+
+    <div class="header-actions">
+        <div class="highlight">
+            <span class="icon"><img class="avatar" src="/img/ava.jpg" alt=""></span><span class="header-name"></span>
+        </div>
+        <button class="open-ul"><i class="ph-bold ph-list"></i></button>
+    </div>
+</header>
+
+<main>
+    <section class="profile">
+        <div class="box animate-on-scroll">
+            <div class="border up">
+                <div class="upper-info">
+                    <div class="ava-wrapper" id="wrapper">
+                        <img class="avatar" src="/img/ava.jpg" alt="">
+                    </div>
+
+                    <div class="text">
+                        <p class="name"></p>
+                        <p class="uid"><i class="ph-bold ph-user-focus"></i><span class="id"></span></p>
+                    </div>
+                </div>
+                <div class="highlight quit">
+                    <span class="icon"><i class="ph-bold ph-sign-out"></i></span>Выйти
+                </div>
+            </div>
+
+            <div class="border down ww">
+                <div class="buttons">
+                    <div class="highlight" id="download-btn">
+                        <span class="icon"><i class="ph ph-cloud-arrow-down"></i></span>Скачать лоадер
+                    </div>
+                    <div class="highlight" id="enter-key-btn">
+                        <span class="icon"><i class="ph ph-key"></i></span>Ввести ключ
+                    </div>
+                    <div class="highlight" id="extend-subscription-btn">
+                        <span class="icon"><i class="ph ph-clock-countdown"></i></span>Продлить подписку
+                    </div>
+                </div>
+            </div>
+
+            <div class="border down">
+                <div class="user-sub">
+                    <div class="till">Роль</div>
+                    <div class="till"><span class="role"></span></div>
+                </div>
+            </div>
+
+            <div class="border down">
+                <div class="user-sub">
+                    <div class="till">Почта</div>
+                    <div class="till"><span class="email"></span></div>
+                </div>
+            </div>
+
+            <div class="border down">
+                <div class="user-sub">
+                    <div class="till">RAM (МБ)</div>
+                    <div class="till ram-till">
+                        <span class="ram-edit-link" id="ram-edit-btn">Изменить</span>
+                        <span class="ram-value" id="ram-display"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border down">
+                <div class="user-sub">
+                    <div class="till">Google Auth</div>
+                    <div class="till twofa-till">
+                        <span class="ram-edit-link" id="twofa-btn">Привязать</span>
+                        <span class="twofa-status" id="twofa-status">Не привязан</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border down" id="creation-row">
+                <div class="user-sub">
+                    <div class="till">Создание аккаунта</div>
+                    <div class="till"><span class="creation"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box down animate-on-scroll">
+            <div class="">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Дата</th>
+                        <th class="action-th"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="prd-name">Фантайм конфиг для pvp</td>
+                        <td class="date">21.04.2025</td>
+                        <td class="action">
+                            <a href="javascript:void(0);" onclick="toggleMenu(this)"><i class="ph-fill ph-dots-three-outline actions-trigger"></i></a>
+                            <div class="dropdown-menu hide">
+                                <a href="#">Переименовать</a>
+                                <a href="#">Поделиться</a>
+                                <a href="#">Опубликовать</a>
+                                <a href="#">Удалить</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="prd-name">Фантайм конфиг для pvp</td>
+                        <td class="date">21.04.2025</td>
+                        <td class="action">
+                            <a href="javascript:void(0);" onclick="toggleMenu(this)"><i class="ph-fill ph-dots-three-outline actions-trigger"></i></a>
+                            <div class="dropdown-menu hide">
+                                <a href="#">Переименовать</a>
+                                <a href="#">Поделиться</a>
+                                <a href="#">Опубликовать</a>
+                                <a href="#">Удалить</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="prd-name">Фантайм конфиг для pvp</td>
+                        <td class="date">21.04.2025</td>
+                        <td class="action">
+                            <a href="javascript:void(0);" onclick="toggleMenu(this)"><i class="ph-fill ph-dots-three-outline actions-trigger"></i></a>
+                            <div class="dropdown-menu hide">
+                                <a href="#edit">
+                                    <i class="ph ph-pencil"></i>
+                                    Редактировать
+                                </a>
+                                <a href="#download">
+                                    <i class="ph ph-download"></i>
+                                    Скачать
+                                </a>
+                                <a href="#share">
+                                    <i class="ph ph-share"></i>
+                                    Поделиться
+                                </a>
+                                <a href="#delete" class="danger">
+                                    <i class="ph ph-trash"></i>
+                                    Удалить
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Фантайм конфиг для pvp</td>
+                        <td>21.04.2025</td>
+                        <td class="actions-td">
+                            <div class="actions-menu-wrapper">
+                                <i class="ph-fill ph-dots-three-outline actions-trigger"></i>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="non">
+                    <span class="icon"><i class="ph-fill ph-cloud"></i></span>
+                    <h1>Пустовато...</h1>
+                    <p>У вас нет конфигов. Для создания конфига, <br> зайдите в клиент и создайте его</p>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Rockstar</h3>
+                <p>@batareikasource <br> Все права пошли нахуй</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Платформа</h3>
+                <ul>
+                    <li><a href="/">Главная</a></li>
+                    <li><a href="/purchase">Покупка</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Аккаунт</h3>
+                <ul>
+                    <li><a href="/signin.html">Вход</a></li>
+                    <li><a href="/signup.html">Регистрация</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><a href="https://t.me/batareikasource">Телеграм</a></li>
+                    <li><a href="https://t.me/batareikasource">Дискорд</a></li>
+                    <li><a href="https://t.me/batareikasource">ВКонтакте</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Соглашения</h3>
+                <ul>
+                    <li><a href="/license">нету батарейка его сьела</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <div id="key-popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup key-popup">
+            <button class="popup-close" id="key-popup-close">&times;</button>
+            <div class="other">
+                <div class="popup-info">
+                    <div class="text">
+                        <h2 class="popup-title">Ввести ключ</h2>
+                        <p class="popup-price">Введите ваш ключ активации</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper">
+                <input type="text" class="promo-input" placeholder="Введите ключ активации" id="key-activation-input">
+            </div>
+
+            <button class="popup-buy" id="key-submit-btn">Активировать ключ</button>
+        </div>
+    </div>
+
+    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+
+    <div class="popup-overlay" id="avatar-modal-overlay" style="display: none;">
+        <div class="key-popup avatar-popup">
+
+            <div class="avatar-crop-section" id="avatar-crop-section">
+                <div class="crop-wrapper">
+                    <div class="crop-canvas-container">
+                        <canvas id="avatar-crop-canvas"></canvas>
+                        <div class="crop-selector" id="crop-selector">
+                            <div class="crop-handle top-left"></div>
+                            <div class="crop-handle top-right"></div>
+                            <div class="crop-handle bottom-left"></div>
+                            <div class="crop-handle bottom-right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="avatar-buttons-column">
+                <button class="popup-button" id="avatar-save-btn">Сохранить</button>
+                <button class="popup-button" id="avatar-cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="ram-popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup key-popup">
+            <button class="popup-close" id="ram-popup-close">&times;</button>
+            <div class="other">
+                <div class="popup-info">
+                    <div class="text">
+                        <h2 class="popup-title">Изменить RAM</h2>
+                        <p class="popup-price">Укажите количество оперативной памяти в МБ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper">
+                <input type="number" class="promo-input" placeholder="Введите RAM в МБ (например, 2048)" id="ram-input" min="512" max="16384" step="512">
+            </div>
+
+            <button class="popup-buy" id="ram-submit-btn">Сохранить</button>
+        </div>
+    </div>
+
+    <div id="twofa-popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup key-popup">
+            <button class="popup-close" id="twofa-popup-close">&times;</button>
+            <div class="other">
+                <div class="popup-info">
+                    <div class="text">
+                        <h2 class="popup-title">Привязка Google Auth</h2>
+                        <p class="popup-price">Отсканируйте QR-код в приложении Google Authenticator</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="twofa-qr-wrapper">
+                <img id="twofa-qr-img" src="" alt="QR Code">
+            </div>
+            <div class="twofa-secret-wrapper">
+                <span class="twofa-secret-label">Или введите код вручную:</span>
+                <span class="twofa-secret" id="twofa-secret"></span>
+            </div>
+
+            <div class="wrapper">
+                <input type="text" class="promo-input" placeholder="Введите 6-значный код" id="twofa-code-input" maxlength="6">
+            </div>
+
+            <button class="popup-buy" id="twofa-submit-btn">Подтвердить</button>
+        </div>
+    </div>
+
+    <div id="twofa-unlink-popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup key-popup">
+            <button class="popup-close" id="twofa-unlink-popup-close">&times;</button>
+            <div class="other">
+                <div class="popup-info">
+                    <div class="text">
+                        <h2 class="popup-title">Отвязка Google Auth</h2>
+                        <p class="popup-price">Введите код из приложения для подтверждения</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper">
+                <input type="text" class="promo-input" placeholder="Введите 6-значный код" id="twofa-unlink-code-input" maxlength="6">
+            </div>
+
+            <button class="popup-buy" id="twofa-unlink-submit-btn">Отвязать</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleMenu(element) {
+            const menu = element.nextElementSibling;
+            const isCurrentlyOpen = menu.classList.contains('show');
+
+            closeAllMenus();
+
+            if (!isCurrentlyOpen) {
+                openMenu(menu);
+            }
+        }
+
+        function openMenu(menu) {
+            menu.classList.remove('hide');
+            menu.classList.add('show');
+
+            menu.style.animation = 'dropdownAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+        }
+
+        function closeAllMenus() {
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            allMenus.forEach(function(menu) {
+                menu.classList.remove('show');
+                menu.classList.add('hide');
+                menu.style.animation = '';
+            });
+        }
+
+        window.toggleMenu = toggleMenu;
+
+        document.addEventListener('click', function(event) {
+            const trigger = event.target.closest('.actions-trigger');
+            const menu = event.target.closest('.dropdown-menu');
+
+            if (!trigger && !menu) {
+                closeAllMenus();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAllMenus();
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const menuItem = event.target.closest('.dropdown-menu a');
+            if (menuItem) {
+                event.preventDefault();
+
+                const action = menuItem.getAttribute('href').substring(1);
+                const row = menuItem.closest('tr');
+                const configName = row.querySelector('.prd-name').textContent.trim();
+
+                closeAllMenus();
+            }
+        });
+
+        window.openDropdownMenu = function(triggerElement) {
+            const menu = triggerElement.nextElementSibling;
+            if (menu && menu.classList.contains('dropdown-menu')) {
+                closeAllMenus();
+                openMenu(menu);
+            }
+        };
+
+        window.closeAllDropdownMenus = closeAllMenus;
+
+        function adjustMenuPosition(menu) {
+            const rect = menu.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            if (rect.right > viewportWidth) {
+                menu.style.right = '0';
+                menu.style.left = 'auto';
+            }
+
+            if (rect.bottom > viewportHeight) {
+                menu.style.top = 'auto';
+                menu.style.bottom = '100%';
+            }
+        }
+
+        const originalOpenMenu = openMenu;
+        openMenu = function(menu) {
+            originalOpenMenu(menu);
+            setTimeout(() => adjustMenuPosition(menu), 10);
+        };
+    });
+</script>
+</body>
+</html>

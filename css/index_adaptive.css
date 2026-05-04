@@ -1,0 +1,242 @@
+:root {
+    --text-color: rgba(255, 255, 255, 0.9);
+    --text-other-color: rgba(255, 255, 255, 0.7);
+    --text-desc: rgb(114, 114, 114);
+}
+
+@media (max-width: 1400px) {
+    .stats .users p {
+        color: var(--text-color);
+    }
+    .other-text br {
+        display: none;
+    }
+    .stats .launches p {
+        color: var(--text-color);
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .main-sect h1, .island .upper h1, .music-text h1 {
+        font-size: 80px;
+    }
+
+    .highlight {
+        font-size: 20px;
+    }
+
+    .highlight span.icon.event {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 1130px) {
+    .main-sect h1, .island .upper h1, .music-text h1 {
+        font-size: 70px;
+        line-height: 115%;
+    }
+
+    .server-events h1, .other-text h1 {
+        font-size: 38px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    main {
+        padding: 197px 6%;
+    }
+
+    header {
+        padding: 14px 6%;
+    }
+
+    .pluses {
+        padding: 100px 0;
+    }
+}
+
+@media screen and (max-width: 985px) {
+    .mod-stack .highlight.mod.mod-bg.hide {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    iframe {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 885px) {
+    .main-sect h1, .island .upper h1, .music-text h1 {
+        letter-spacing: 0;
+        font-size: 60px;
+        line-height: 115%;
+    }
+
+    .main-sect .highlight {
+        font-size: 18px;
+    }
+
+    .main-sect .highlight span.icon.event {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .other-statuses {
+        display: block;
+        text-align: center;
+        padding: 50px 0 100px 0;
+    }
+    .other.statuses {
+        margin-top: 30px;
+        justify-content: center;
+    }
+    .mod-stack {
+        width: 400px;
+    }
+    .highlight.mod img {
+        width: 60px;
+    }
+
+    .highlight.mod.mod-front br {
+        display: none;
+    }
+
+    .highlight.mod .mod-name {
+        font-size: 20px;
+    }
+
+    .highlight.mod .mod-desc {
+        font-size: 16px;
+    }
+
+    .highlight.mod.mod-bg.l {
+        transform: translate(-132px, 0px) scale(0.85) !important;
+    }
+    .highlight.mod.mod-bg.r {
+        transform: translate(132px, 0px) scale(0.85) !important;
+    }
+}
+
+@media (max-width: 750px) {
+    .right-events {
+        gap: 9px;
+        margin: 37px 0;
+    }
+    .main-sect h1, .island .upper h1, .music-text h1 {
+        font-size: 50px;
+    }
+
+    .island .upper h1, .music-text h1 {
+        line-height: 1;
+        text-align: center;
+    }
+
+    .main-sect h2 {
+        font-size: 45px;
+    }
+
+    .highlight {
+        font-size: 16px;
+    }
+
+    .highlight span.icon.event {
+        font-size: 14px;
+    }
+
+    .highlight {
+        padding: 5px 18px;
+        padding-left: 5px;
+    }
+
+    .highlight .icon {
+        padding: 6px;
+    }
+
+    .highlight .icon.event {
+        padding: 9px 10px;
+    }
+
+    br {
+        display: none;
+    }
+
+    .server-events p, .music-text p {
+        font-size: 16px;
+    }
+
+    .music-stack {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 655px) {
+    .main-sect h1, .island .upper h1, .music-text h1 {
+        font-size: 45px;
+    }
+    .music-stack {
+        transform: scale(0.8);
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 620px) {
+    .mod-stack {
+        margin-top: 70px;
+    }
+    .highlight.mod.mod-bg.l {
+        transform: translate(0, 40px) scale(0.85) !important;
+    }
+    .highlight.mod.mod-bg.r {
+        transform: translate(0, -40px) scale(0.85) !important;
+    }
+}
+
+@media (max-width: 550px) {
+    .server-events {
+        display: block;
+        text-align: center;
+        padding: 60px 0;
+    }
+    .server-events p {
+        color: var(--text-color);
+    }
+
+    .server-events .statuses {
+        margin-top: 22px;
+        justify-content: center;
+    }
+    .music-stack {
+        transform: scale(0.65);
+    }
+}
+
+@media (max-width: 501px) {
+    .main-sect .highlight {
+        margin-left: 0;
+    }
+    .main-sect .highlight:last-child {
+        margin-left: 8px;
+    }
+}
+
+@media (max-width: 445px) {
+    .main-sect .highlight:last-child {
+        margin-left: 0px;
+    }
+    .mod-stack {
+        width: 370px;
+        transform: translate(-15px, 0);
+    }
+    .highlight.mod .mod-name { 
+        font-size: 18px;
+    }
+    .highlight.mod .mod-desc {
+        font-size: 15px;
+    }
+    .highlight.mod img {
+        width: 50px;
+    }
+}

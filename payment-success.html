@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main/index.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <script defer src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <title>Оплата успешна - @batareikasource</title>
+    <style>
+        .success-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            color: var(--text-color);
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #10b981;
+            margin-bottom: 24px;
+        }
+        .success-title {
+            font-size: 42px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .success-text {
+            font-size: 18px;
+            color: var(--text-desc-on);
+            margin-bottom: 32px;
+        }
+        .success-button {
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .success-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="success-container">
+            <i class="ph-fill ph-check-circle success-icon"></i>
+            <h1 class="success-title">Оплата успешна!</h1>
+            <p class="success-text">Ваша подписка активирована. Спасибо за покупку!</p>
+            <a href="/profile" class="success-button">Перейти в профиль</a>
+        </div>
+    </main>
+</body>
+</html>

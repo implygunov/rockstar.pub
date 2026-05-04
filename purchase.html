@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="preload" href="img/logo.png" as="image" fetchpriority="high">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main/index.css" data-critical>
+    <link rel="stylesheet" href="css/main/purchase.css" data-critical>
+    <link rel="stylesheet" href="css/header.css" data-critical>
+    <link rel="stylesheet" href="css/footer.css" data-async data-original-media="all" media="print" onload="this.onload=null;this.media='all'">
+    <link rel="stylesheet" href="css/index_adaptive.css" data-async data-original-media="all" media="print" onload="this.onload=null;this.media='all'">
+
+    <!-- Phosphor Icons -->
+    <script defer src="js/perfomance.js"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <script defer src="js/auth.js"></script>
+    <script defer src="js/header.js"></script>
+    <script defer src="js/purchase.js"></script>
+
+    <!-- Title -->
+    <title>Покупка - @batareikasource</title>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="logo">
+        <a href="/" class="logo-text">
+            <img src="/img/logo.png" alt="" data-lazy="false" fetchpriority="high">@batareikasource
+        </a>
+    </div>
+
+    <ul>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/purchase">Покупка</a></li>
+        <li><a href="/faq">FAQ</a></li>
+    </ul>
+
+    <div class="header-actions">
+        <button onclick="location.href='/signup.html'" class="button">Регистрация</button>
+        <button class="open-ul"><i class="ph-bold ph-list"></i></button>
+    </div>
+</header>
+
+<!-- Main -->
+<main>
+    <section class="main-sect">
+        <h1>
+            <span class="h1-text">Выберите</span><span class="highlight">
+                    <span class="icon"><i class="ph-fill ph-shopping-cart"></i></span>
+                    <span class="text-content">Подходящий</span>
+                </span><br>
+            <span class="h1-text">Тариф для Вас</span>
+        </h1>
+    </section>
+
+    <!-- Тарифы -->
+    <section class="pricing-section">
+        <div class="pricing-cards">
+            <!-- Базовый тариф -->
+            <div class="pricing-card animate-on-scroll">
+                <div class="card-header">
+                    <div class="highlight plan-badge">
+                        <span class="icon"><i class="ph-fill ph-star"></i></span>Базовый
+                    </div>
+                    <h2>Начальный</h2>
+                    <div class="price">
+                        <span class="amount">499₽</span>
+                        <span class="period">/ месяц</span>
+                    </div>
+                </div>
+                <div class="card-features">
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Все основные функции</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Dynamic Island</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Музыкальный трекер</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Поддержка модов</span>
+                    </div>
+                    <div class="feature disabled">
+                        <i class="ph-fill ph-x-circle"></i>
+                        <span>Приоритетная поддержка</span>
+                    </div>
+                    <div class="feature disabled">
+                        <i class="ph-fill ph-x-circle"></i>
+                        <span>Эксклюзивные функции</span>
+                    </div>
+                </div>
+                <button class="buy-button" onclick="openModal('Начальный', '499₽', '/ месяц', 'Базовый', '1 месяц', '499₽')">Купить</button>
+            </div>
+
+            <!-- Премиум тариф -->
+            <div class="pricing-card premium animate-on-scroll">
+                <div class="popular-badge">Популярный</div>
+                <div class="card-header">
+                    <div class="highlight plan-badge">
+                        <span class="icon"><i class="ph-fill ph-crown"></i></span>Премиум
+                    </div>
+                    <h2>Продвинутый</h2>
+                    <div class="price">
+                        <span class="amount">999₽</span>
+                        <span class="period">/ месяц</span>
+                    </div>
+                </div>
+                <div class="card-features">
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Все функции Базового</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Приоритетная поддержка</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Эксклюзивные функции</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Ранний доступ к обновлениям</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Кастомные конфиги</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Премиум Discord роль</span>
+                    </div>
+                </div>
+                <button class="buy-button premium-btn" onclick="openModal('Продвинутый', '999₽', '/ месяц', 'Премиум', '1 месяц', '999₽')">Купить</button>
+            </div>
+
+            <!-- Лайфтайм тариф -->
+            <div class="pricing-card animate-on-scroll">
+                <div class="card-header">
+                    <div class="highlight plan-badge">
+                        <span class="icon"><i class="ph-fill ph-infinity"></i></span>Навсегда
+                    </div>
+                    <h2>Пожизненный</h2>
+                    <div class="price">
+                        <span class="amount">4999₽</span>
+                        <span class="period">/ навсегда</span>
+                    </div>
+                </div>
+                <div class="card-features">
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Все функции Премиум</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Пожизненный доступ</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Все будущие обновления</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>VIP поддержка</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Эксклюзивная Discord роль</span>
+                    </div>
+                    <div class="feature">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span>Влияние на разработку</span>
+                    </div>
+                </div>
+                <button class="buy-button" onclick="openModal('Пожизненный', '4999₽', '/ навсегда', 'Лайфтайм', 'Навсегда', '4999₽')">Купить</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ секция -->
+    <section class="faq-section animate-on-scroll">
+        <div class="faq-header">
+            <div class="highlight">
+                <span class="icon"><i class="ph-fill ph-question"></i></span>FAQ
+            </div>
+            <h2>Часто задаваемые вопросы</h2>
+        </div>
+        <div class="faq-items">
+            <div class="faq-item animate-on-scroll">
+                <h3>Как происходит оплата?</h3>
+                <p>После выбора тарифа вы будете перенаправлены на защищённую страницу оплаты. Принимаем карты, электронные кошельки и криптовалюту.</p>
+            </div>
+            <div class="faq-item animate-on-scroll">
+                <h3>Можно ли вернуть деньги?</h3>
+                <p>Да, в течение 7 дней с момента покупки вы можете запросить возврат средств, если клиент вам не подошёл.</p>
+            </div>
+            <div class="faq-item animate-on-scroll">
+                <h3>Как получить клиент после оплаты?</h3>
+                <p>Сразу после оплаты вы получите доступ к личному кабинету, где сможете скачать клиент и получить лицензионный ключ.</p>
+            </div>
+            <div class="faq-item animate-on-scroll">
+                <h3>Есть ли пробный период?</h3>
+                <p>Мы предоставляем 3 дня бесплатного доступа для новых пользователей. Регистрируйтесь и тестируйте все функции!</p>
+            </div>
+        </div>
+    </section>
+    <!-- Модальное окно покупки -->
+    <div class="popup-overlay" id="purchaseModal" style="display: none;">
+        <div class="popup key-popup">
+            <button class="popup-close" onclick="closeModal()">&times;</button>
+            
+            <div class="other">
+                <div class="popup-info">
+                    <div class="text">
+                        <h2 class="popup-title" id="modalPlanName">Премиум</h2>
+                        <p class="popup-price">
+                            <span id="modalPrice">999₽</span>
+                            <span id="modalPeriod">/ месяц</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper promo-wrapper">
+                <input type="text" class="promo-input" placeholder="Промокод (необязательно)" id="promoInput">
+                <button class="promo-check-btn" onclick="checkPromocode()">Проверить</button>
+            </div>
+            <div class="promo-result" id="promoResult" style="display: none;"></div>
+
+            <div class="payment-methods-popup">
+                <label class="payment-label">Способ оплаты</label>
+                <div class="payment-options-popup">
+                    <label class="payment-option-popup">
+                        <input type="radio" name="payment" value="card" checked>
+                        <span class="payment-btn">
+                            <i class="ph-fill ph-credit-card"></i>
+                            Карта
+                        </span>
+                    </label>
+                    <label class="payment-option-popup">
+                        <input type="radio" name="payment" value="qiwi">
+                        <span class="payment-btn">
+                            <i class="ph-fill ph-wallet"></i>
+                            QIWI
+                        </span>
+                    </label>
+                    <label class="payment-option-popup">
+                        <input type="radio" name="payment" value="crypto">
+                        <span class="payment-btn">
+                            <i class="ph-fill ph-currency-btc"></i>
+                            Крипта
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="order-summary-popup">
+                <div class="summary-row-popup">
+                    <span>Тариф:</span>
+                    <span id="summaryPlan">Премиум</span>
+                </div>
+                <div class="summary-row-popup">
+                    <span>Период:</span>
+                    <span id="summaryPeriod">1 месяц</span>
+                </div>
+                <div class="summary-row-popup total-row">
+                    <span>Итого:</span>
+                    <span id="summaryTotal">999₽</span>
+                </div>
+            </div>
+
+            <button class="popup-buy" onclick="submitPurchase()">
+                <i class="ph-fill ph-lock"></i>
+                Оплатить безопасно
+            </button>
+
+            <p class="payment-info-popup">
+                <i class="ph-fill ph-shield-check"></i>
+                Защищённая оплата. Возврат в течение 7 дней
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Rockstar</h3>
+                <p>@batareikasource <br> Все права пошли нахуй</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Платформа</h3>
+                <ul>
+                    <li><a href="/">Главная</a></li>
+                    <li><a href="/purchase">Покупка</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Аккаунт</h3>
+                <ul>
+                    <li><a href="/signin.html">Вход</a></li>
+                    <li><a href="/signup.html">Регистрация</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><a href="https://t.me/batareikasource">Телеграм</a></li>
+                    <li><a href="https://t.me/batareikasource">Дискорд</a></li>
+                    <li><a href="https://t.me/batareikasource">ВКонтакте</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Соглашения</h3>
+                <ul>
+                    <li><a href="/license">нету батарейка его сьела</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</main>
+<script>
+    const mainSect = document.querySelector('.main-sect');
+
+    const scrollElements = document.querySelectorAll(".animate-on-scroll");
+
+    const elementInView = (el, dividend = 1) => {
+    const elementTop = el.getBoundingClientRect().top;
+    return (
+        elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend);
+    };
+
+    const displayScrollElement = (element) => {
+        element.classList.add("is-visible");
+    };
+    const hideScrollElement = (element) => {
+        element.classList.remove("is-visible");
+    };
+
+    const handleScrollAnimation = () => {
+        scrollElements.forEach((el) => {
+            if (elementInView(el, 1.05)) {
+                displayScrollElement(el);
+            } else {
+                hideScrollElement(el);
+            }
+        });
+        if (mainSect) {
+            if (elementInView(mainSect, 1.0)) {
+                mainSect.classList.add('visible');
+            } else {
+                mainSect.classList.remove('visible');
+            }
+        }
+    }
+
+    window.addEventListener("scroll", () => {
+        handleScrollAnimation();
+    });
+
+    handleScrollAnimation();
+
+</script>
+</body>
+</html>
