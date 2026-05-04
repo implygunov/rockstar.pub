@@ -81,7 +81,7 @@ router.post('/account/setup-2fa', authMiddleware, (req, res) => {
     }
 
     const secret = speakeasy.generateSecret({
-      name: `Rockstar (${user.login})`
+      name: `Kazahstan (${user.login})`
     });
 
     try {
@@ -246,14 +246,14 @@ router.get('/download/loader', authMiddleware, (req, res) => {
       return res.status(403).json({ error: 'Требуется активная подписка для скачивания' });
     }
     
-    const loaderPath = require('path').join(__dirname, '../../rockstar-1.0.0.jar');
+    const loaderPath = require('path').join(__dirname, '../../Kazahstan-1.0.0.jar');
     const fs = require('fs');
     
     if (!fs.existsSync(loaderPath)) {
       return res.status(404).json({ error: 'Файл не найден' });
     }
     
-    res.download(loaderPath, 'rockstar-1.0.0.jar');
+    res.download(loaderPath, 'Kazahstan-1.0.0.jar');
   });
 });
 

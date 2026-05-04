@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-title Генератор ключей Rockstar 2.0 - роли 2026
+title Генератор ключей Kazahstan 2.0 - роли 2026
 
 :menu
 cls

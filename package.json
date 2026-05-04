@@ -1,7 +1,7 @@
 {
-  "name": "rockstar-auth-api",
+  "name": "Kazahstan-auth-api",
   "version": "1.0.0",
-  "description": "Rockstar authentication API",
+  "description": "Kazahstan authentication API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -18,7 +18,7 @@
     "mysql2": "^3.22.3",
     "qrcode": "^1.5.3",
     "speakeasy": "^2.0.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^6.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

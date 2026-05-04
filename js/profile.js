@@ -152,7 +152,7 @@
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'rockstar-1.0.0.jar';
+                        a.download = 'Kazahstan-1.0.0.jar';
                         document.body.appendChild(a);
                         a.click();
                         window.URL.revokeObjectURL(url);
