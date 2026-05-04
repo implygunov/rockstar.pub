@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+
 const authRoutes = require('./api/routes/auth.js');
 const accountRoutes = require('./api/routes/account.js');
 const configsRoutes = require('./api/routes/configs.js');
@@ -28,18 +29,21 @@ app.use('/api/v1', adminRoutes);
 // Middleware для проверки админ-сессии
 app.get('/:sessionUrl.html', (req, res, next) => {
   const sessionUrl = req.params.sessionUrl;
-  
-  // Проверяем является ли это админ-сессией
+
   const db = getDatabase();
+
   db.get(
-    `SELECT * FROM admin_sessions WHERE session_url = ? AND expires_at > datetime('now')`,
+    `SELECT * FROM admin_sessions WHERE session_url = ? AND expires_at > NOW()`,
     [sessionUrl],
     (err, session) => {
+      if (err) {
+        console.error('❌ Ошибка проверки админ-сессии:', err);
+        return next();
+      }
+
       if (session) {
-        // Это валидная админ-сессия, отдаем админку
         res.sendFile(path.join(__dirname, 'admin-panel.html'));
       } else {
-        // Обычный файл
         next();
       }
     }
@@ -56,16 +60,18 @@ app.get('/', (req, res) => {
 
 initDatabase().then(() => {
   const db = getDatabase();
-  
-  // Создаем админ-сессию при запуске
+
   const crypto = require('crypto');
   const sessionUrl = crypto.randomBytes(8).toString('hex');
+
   const expiresAt = new Date();
   expiresAt.setHours(expiresAt.getHours() + 24);
 
+  const expiresAtFormatted = expiresAt.toISOString().slice(0, 19).replace('T', ' ');
+
   db.run(
     `INSERT INTO admin_sessions (session_url, expires_at) VALUES (?, ?)`,
-    [sessionUrl, expiresAt.toISOString()],
+    [sessionUrl, expiresAtFormatted],
     (err) => {
       if (err) {
         console.error('❌ Ошибка создания админ-сессии:', err);
@@ -74,11 +80,11 @@ initDatabase().then(() => {
   );
 
   app.listen(PORT, () => {
-    console.log(`\nСайт: http://localhost:${PORT}`);
-    console.log(`Эндпоинты: http://localhost:${PORT}/api/v1`);
-    console.log(`Админ-панель: http://localhost:${PORT}/${sessionUrl}.html\n`);
+    console.log(`\nСайт запущен на порту: ${PORT}`);
+    console.log(`Эндпоинты: /api/v1`);
+    console.log(`Админ-панель: /${sessionUrl}.html\n`);
   });
 }).catch(err => {
-  console.error('Failed to initialize database:', err);
+  console.error('❌ Failed to initialize database:', err);
   process.exit(1);
 });
