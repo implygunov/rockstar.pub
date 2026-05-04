@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const authRoutes = require('./api/routes/auth');
-const accountRoutes = require('./api/routes/account');
-const configsRoutes = require('./api/routes/configs');
-const paymentRoutes = require('./api/routes/payment');
-const adminRoutes = require('./api/routes/admin');
-const { initDatabase, getDatabase } = require('./api/database/db');
+const authRoutes = require('./api/routes/auth.js');
+const accountRoutes = require('./api/routes/account.js');
+const configsRoutes = require('./api/routes/configs.js');
+const paymentRoutes = require('./api/routes/payment.js');
+const adminRoutes = require('./api/routes/admin.js');
+const { initDatabase, getDatabase } = require('./api/database/db.js');
 
 const app = express();
 const PORT = process.env.PORT || 8081;
