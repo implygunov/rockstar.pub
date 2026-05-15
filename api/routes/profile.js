@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
+
 const router = express.Router();
 
 const { getDatabase } = require('../database/db.js');
@@ -90,123 +92,148 @@ router.post('/profile', async (req, res) => {
             LIMIT 1
             `,
             [login, login],
-            (err, user) => {
-                if (err) {
-                    console.error('❌ Profile database error:', err);
+            async (err, user) => {
+                try {
+                    if (err) {
+                        console.error('❌ Profile database error:', err);
 
-                    return res.status(500).json({
-                        allowed: false,
-                        error: 'Database error'
-                    });
-                }
+                        return res.status(500).json({
+                            allowed: false,
+                            error: 'Database error'
+                        });
+                    }
 
-                if (!user) {
-                    return res.status(401).json({
-                        allowed: false,
-                        error: 'Invalid login or password'
-                    });
-                }
+                    if (!user) {
+                        return res.status(401).json({
+                            allowed: false,
+                            error: 'Invalid login or password'
+                        });
+                    }
 
-                if (String(user.password) !== String(password)) {
-                    return res.status(401).json({
-                        allowed: false,
-                        error: 'Invalid login or password'
-                    });
-                }
+                    if (!user.password) {
+                        return res.status(401).json({
+                            allowed: false,
+                            error: 'Invalid login or password'
+                        });
+                    }
 
-                if (Number(user.banned) === 1) {
-                    return res.status(403).json({
-                        allowed: false,
-                        error: 'User is banned',
-                        username: user.login || 'null',
-                        hwid: user.hwid || 'null',
-                        role: user.role || 'null',
-                        uid: String(user.id),
-                        subTime: formatSubTime(user.sub_until)
-                    });
-                }
+                    const passwordOk = await bcrypt.compare(password, user.password);
 
-                db.get(
-                    `
-                    SELECT id, login
-                    FROM users
-                    WHERE hwid = ?
-                    LIMIT 1
-                    `,
-                    [hwid],
-                    (hwidErr, hwidUser) => {
-                        if (hwidErr) {
-                            console.error('❌ HWID check database error:', hwidErr);
+                    if (!passwordOk) {
+                        return res.status(401).json({
+                            allowed: false,
+                            error: 'Invalid login or password'
+                        });
+                    }
 
-                            return res.status(500).json({
-                                allowed: false,
-                                error: 'Database error'
-                            });
-                        }
+                    if (Number(user.banned) === 1) {
+                        return res.status(403).json({
+                            allowed: false,
+                            error: 'User is banned',
+                            username: user.login || 'null',
+                            hwid: user.hwid || 'null',
+                            role: user.role || 'null',
+                            uid: String(user.id),
+                            subTime: formatSubTime(user.sub_until)
+                        });
+                    }
 
-                        if (hwidUser && Number(hwidUser.id) !== Number(user.id)) {
-                            return res.status(409).json({
-                                allowed: false,
-                                error: 'HWID already used by another user'
-                            });
-                        }
+                    db.get(
+                        `
+                        SELECT id, login
+                        FROM users
+                        WHERE hwid = ?
+                        LIMIT 1
+                        `,
+                        [hwid],
+                        (hwidErr, hwidUser) => {
+                            if (hwidErr) {
+                                console.error('❌ HWID check database error:', hwidErr);
 
-                        db.run(
-                            `
-                            UPDATE users
-                            SET hwid = ?
-                            WHERE id = ?
-                            `,
-                            [hwid, user.id],
-                            function (updateErr) {
-                                if (updateErr) {
-                                    console.error('❌ HWID update database error:', updateErr);
+                                return res.status(500).json({
+                                    allowed: false,
+                                    error: 'Database error'
+                                });
+                            }
 
-                                    return res.status(500).json({
-                                        allowed: false,
-                                        error: 'Database error'
-                                    });
-                                }
+                            if (hwidUser && Number(hwidUser.id) !== Number(user.id)) {
+                                return res.status(409).json({
+                                    allowed: false,
+                                    error: 'HWID already used by another user'
+                                });
+                            }
 
-                                const role = user.role || 'user';
+                            db.run(
+                                `
+                                UPDATE users
+                                SET hwid = ?
+                                WHERE id = ?
+                                `,
+                                [hwid, user.id],
+                                function (updateErr) {
+                                    if (updateErr) {
+                                        console.error('❌ HWID update database error:', updateErr);
 
-                                const isAdmin =
-                                    role === 'admin' ||
-                                    role === 'owner' ||
-                                    role === 'moderator';
+                                        return res.status(500).json({
+                                            allowed: false,
+                                            error: 'Database error'
+                                        });
+                                    }
 
-                                const hasActiveSub = isSubscriptionActive(user.sub_until);
+                                    if (this.changes === 0) {
+                                        return res.status(404).json({
+                                            allowed: false,
+                                            error: 'User not found'
+                                        });
+                                    }
 
-                                const allowed = isAdmin || hasActiveSub;
+                                    const role = user.role || 'user';
 
-                                if (!allowed) {
-                                    return res.status(403).json({
-                                        allowed: false,
-                                        error: 'Subscription expired',
+                                    const isAdmin =
+                                        role === 'admin' ||
+                                        role === 'owner' ||
+                                        role === 'moderator';
+
+                                    const hasActiveSub = isSubscriptionActive(user.sub_until);
+
+                                    const allowed = isAdmin || hasActiveSub;
+
+                                    if (!allowed) {
+                                        return res.status(403).json({
+                                            allowed: false,
+                                            error: 'Subscription expired',
+                                            username: user.login || 'null',
+                                            hwid: hwid,
+                                            role: role,
+                                            uid: String(user.id),
+                                            subTime: formatSubTime(user.sub_until)
+                                        });
+                                    }
+
+                                    return res.json({
+                                        allowed: true,
+                                        message: 'HWID saved successfully',
                                         username: user.login || 'null',
                                         hwid: hwid,
                                         role: role,
                                         uid: String(user.id),
-                                        subTime: formatSubTime(user.sub_until)
+                                        subTime: formatSubTime(user.sub_until),
+                                        ram: user.ram ? String(user.ram) : '4096',
+                                        version: user.version || 'default',
+                                        group: user.group_name || 'Default'
                                     });
                                 }
+                            );
+                        }
+                    );
+                } catch (callbackError) {
+                    console.error('❌ Profile callback error:', callbackError);
 
-                                return res.json({
-                                    allowed: true,
-                                    message: 'HWID saved successfully',
-                                    username: user.login || 'null',
-                                    hwid: hwid,
-                                    role: role,
-                                    uid: String(user.id),
-                                    subTime: formatSubTime(user.sub_until),
-                                    ram: user.ram ? String(user.ram) : '4096',
-                                    version: user.version || 'default',
-                                    group: user.group_name || 'Default'
-                                });
-                            }
-                        );
-                    }
-                );
+                    return res.status(500).json({
+                        allowed: false,
+                        error: 'Server error'
+                    });
+                }
             }
         );
     } catch (error) {
