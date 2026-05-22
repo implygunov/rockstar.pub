@@ -5,7 +5,7 @@ const { getDatabase } = require('../database/db.js');
 
 router.post('/login', async (req, res) => {
     try {
-        const { login, password, hwid } = req.body;
+       const { login, password } = req.body;
 
         if (!login || !password) {
             return res.status(400).json({
@@ -60,7 +60,6 @@ router.post('/login', async (req, res) => {
                 return res.json({
                     allowed: true,
                     username: user.login,
-                    hwid: user.hwid || hwid || '',
                     role: role,
                     uid: String(user.id),
                     subTime: formatSubTime(user.sub_until),
