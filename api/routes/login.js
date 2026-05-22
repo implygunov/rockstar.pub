@@ -40,18 +40,7 @@ router.post('/login', async (req, res) => {
                     return res.status(403).json({ allowed: false, error: 'User is banned' });
                 }
 
-                // Привязка HWID если передан
-                if (hwid && typeof hwid === 'string') {
-                    if (!user.hwid || user.hwid === '') {
-                        // Первый вход — привязываем HWID
-                        db.run('UPDATE users SET hwid = ? WHERE id = ?', [hwid, user.id]);
-                    } else if (user.hwid !== hwid) {
-                        return res.status(403).json({
-                            allowed: false,
-                            error: 'HWID mismatch. Contact admin.'
-                        });
-                    }
-                }
+                
 
                 // Проверка подписки
                 const role = user.role || 'user';
