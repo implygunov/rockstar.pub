@@ -5,7 +5,7 @@ const { getDatabase } = require('../database/db.js');
 
 router.post('/login', async (req, res) => {
     try {
-        const { login, password } = req.body;
+        const { login, password, hwid } = req.body;
 
         if (!login || !password) {
             return res.status(400).json({
@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
         const db = getDatabase();
 
         db.get(
-            `SELECT id, login, password, email, role, group_name, ram, sub_until, version, banned, status
+            `SELECT id, login, password, email, role, group_name, hwid, ram, sub_until, version, banned, status
              FROM users WHERE login = ? LIMIT 1`,
             [login],
             async (err, user) => {
@@ -40,6 +40,17 @@ router.post('/login', async (req, res) => {
                     return res.status(403).json({ allowed: false, error: 'User is banned' });
                 }
 
+                // Привязка HWID
+                if (hwid && typeof hwid === 'string' && hwid !== 'unknown') {
+                    if (!user.hwid || user.hwid === '' || user.hwid === 'null') {
+                        // Первый вход — привязываем HWID
+                        db.run('UPDATE users SET hwid = ? WHERE id = ?', [hwid, user.id]);
+                        console.log(`[Auth] HWID set for ${user.login}: ${hwid.substring(0, 16)}...`);
+                    }
+                    // Не блокируем если HWID отличается — 
+                    // Java клиент проверяет через /api/profile
+                }
+
                 // Проверка подписки
                 const role = user.role || 'user';
                 const isAdmin = ['admin', 'owner', 'moderator'].includes(role);
@@ -58,6 +69,7 @@ router.post('/login', async (req, res) => {
                 return res.json({
                     allowed: true,
                     username: user.login,
+                    hwid: user.hwid || hwid || '',
                     role: role,
                     uid: String(user.id),
                     subTime: formatSubTime(user.sub_until),
