@@ -5,7 +5,7 @@ const { getDatabase } = require('../database/db.js');
 
 router.post('/login', async (req, res) => {
     try {
-       const { login, password } = req.body;
+        const { login, password } = req.body;
 
         if (!login || !password) {
             return res.status(400).json({
@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
         const db = getDatabase();
 
         db.get(
-            `SELECT id, login, password, email, role, group_name, hwid, ram, sub_until, version, banned, status
+            `SELECT id, login, password, email, role, group_name, ram, sub_until, version, banned, status
              FROM users WHERE login = ? LIMIT 1`,
             [login],
             async (err, user) => {
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
                     return res.status(403).json({ allowed: false, error: 'User not found' });
                 }
 
-                // Проверка пароля через bcrypt
+                // Проверка пароля
                 const validPassword = await bcrypt.compare(password, user.password);
                 if (!validPassword) {
                     return res.status(403).json({ allowed: false, error: 'Wrong password' });
@@ -39,8 +39,6 @@ router.post('/login', async (req, res) => {
                 if (Number(user.banned) === 1) {
                     return res.status(403).json({ allowed: false, error: 'User is banned' });
                 }
-
-                
 
                 // Проверка подписки
                 const role = user.role || 'user';
