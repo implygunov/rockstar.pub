@@ -99,6 +99,7 @@ initDatabase()
       console.log(`Эндпоинты: /api/v1`);
       console.log(`Java profile API: /api/profile`);
       console.log(`Локально: http://localhost:${PORT}\n`);
+      console.log('Login API: /api/login');  
     });
   })
   .catch((err) => {
