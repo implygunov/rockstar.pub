@@ -9,6 +9,7 @@ const configsRoutes = require('./api/routes/configs.js');
 const paymentRoutes = require('./api/routes/payment.js');
 const adminRoutes = require('./api/routes/admin.js');
 const profileRoutes = require('./api/routes/profile.js');
+const loginRoutes = require('./api/routes/login.js');
 
 const { initDatabase, getDatabase } = require('./api/database/db.js');
 
@@ -28,6 +29,7 @@ app.use('/api/v1', accountRoutes);
 app.use('/api/v1', configsRoutes);
 app.use('/api/v1', paymentRoutes);
 app.use('/api/v1', adminRoutes);
+app.use('/api', loginRoutes);
 
 // Для Java-клиента:
 // POST /api/profile
