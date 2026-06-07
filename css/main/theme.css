@@ -1,60 +1,93 @@
 /* =========================================================
-   theme.css — слой полировки дизайна (фиолетово-синий неон)
+   theme.css — глобальный слой дизайна (фиолетово-синий неон)
    Подключается ПОСЛЕ остальных стилей и аккуратно усиливает их.
-   Безопасно удаляется: убери <link> на этот файл — вернётся старый вид.
+   Только визуал: не меняет разметку, классы и JS-логику.
+   Безопасно отключается: убери <link> на этот файл.
    ========================================================= */
 
 :root {
     --accent:        #9747FF;   /* фиолетовый */
     --accent-2:      #4F7CFF;   /* синий */
+    --accent-3:      #C46BFF;   /* светло-сиреневый блик */
     --accent-soft:   rgba(151, 71, 255, 0.55);
     --accent-glow:   rgba(151, 71, 255, 0.35);
     --accent-glow-2: rgba(79, 124, 255, 0.30);
+    --grad-accent:   linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    --card-glass:    rgba(20, 18, 30, 0.42);
+    --hairline:      rgba(255, 255, 255, 0.08);
 }
 
+/* ---------- Глобальная типографика/сглаживание ---------- */
+* {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+html { scroll-behavior: smooth; }
+
 /* ---------- Фоновое свечение (амбиент) ---------- */
-/* Фиксированный слой за контентом: два мягких цветных пятна. */
+/* Фиксированный слой за контентом: мягкие цветные пятна, лёгкое движение. */
 body::before {
+    content: "";
+    position: fixed;
+    inset: -10%;
+    z-index: -2;
+    pointer-events: none;
+    background:
+        radial-gradient(50% 45% at 12% 6%,   var(--accent-glow)   0%, transparent 60%),
+        radial-gradient(48% 44% at 90% 18%,  var(--accent-glow-2) 0%, transparent 62%),
+        radial-gradient(60% 55% at 50% 112%, rgba(151, 71, 255, 0.16) 0%, transparent 72%);
+    filter: saturate(1.15);
+    animation: ambientFloat 20s ease-in-out infinite alternate;
+}
+
+/* Тонкая «звёздная» сетка поверх фона для глубины */
+body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background:
-        radial-gradient(60% 55% at 15% 8%,  var(--accent-glow)   0%, transparent 60%),
-        radial-gradient(55% 50% at 88% 22%, var(--accent-glow-2) 0%, transparent 62%),
-        radial-gradient(70% 60% at 50% 110%, rgba(151, 71, 255, 0.18) 0%, transparent 70%);
-    filter: saturate(1.1);
-    animation: ambientFloat 18s ease-in-out infinite alternate;
+    background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 38px 38px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    opacity: 0.6;
 }
 
 @keyframes ambientFloat {
-    0%   { transform: translate3d(0, 0, 0)        scale(1);    opacity: 0.9; }
-    100% { transform: translate3d(0, -22px, 0)    scale(1.06); opacity: 1;   }
+    0%   { transform: translate3d(0, 0, 0)     scale(1);    opacity: 0.85; }
+    100% { transform: translate3d(0, -26px, 0) scale(1.07); opacity: 1;    }
 }
 
-/* Выделение текста в акцентном цвете */
-::selection {
-    background: var(--accent-soft);
-    color: #fff;
+/* Выделение текста и фокус-кольца в акцентном цвете */
+::selection { background: var(--accent-soft); color: #fff; }
+
+:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 2px;
+    border-radius: 8px;
 }
 
 /* ---------- Скроллбар в акценте ---------- */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, var(--accent), var(--accent-2));
     border-radius: 20px;
+    border: 2px solid rgba(0,0,0,0.35);
 }
+::-webkit-scrollbar-thumb:hover { filter: brightness(1.15); }
 
-/* ---------- Стеклянные элементы: лёгкий цветной отблеск ---------- */
-/* Усиливаем тень и добавляем еле заметный внутренний цветной свет. */
+/* ---------- Стеклянные элементы: цветной отблеск + мягкая тень ---------- */
 .highlight {
     box-shadow:
-        4px 7px 18px rgba(0, 0, 0, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    transition: box-shadow .25s ease, transform .25s ease;
+        0 8px 24px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: box-shadow .28s ease, transform .28s ease, background .28s ease;
 }
 
-/* Тёплый цветной отблеск по верхнему краю стеклянной рамки */
+/* Цветной отблеск по краю стеклянной рамки */
 .highlight::before {
     background: linear-gradient(
         149deg,
@@ -71,29 +104,35 @@ body::before {
 .main-sect h1 .highlight {
     box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.02),
-        0 8px 30px var(--accent-glow);
+        0 10px 34px var(--accent-glow);
 }
 
 .main-sect h1 .highlight .icon {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    background: var(--grad-accent);
     color: #fff;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    box-shadow: 0 4px 16px var(--accent-glow);
 }
 
-/* Заголовок hero: чуть выразительнее свет сверху */
+/* Анимированный градиент в крупных заголовках hero */
+.island .upper h1,
+.music h1,
+.other-statuses h1,
+.main-sect h1 {
+    text-shadow: 0 0 60px var(--accent-glow);
+}
+
 .island .upper h1,
 .music h1,
 .other-statuses h1 {
-    background-image: linear-gradient(to bottom, #ffffff 38%, #c9c2e6 78%, #8f86b0 100%);
+    background-image: linear-gradient(100deg, #ffffff 30%, #d9d2f5 60%, #a99fd6 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 60px var(--accent-glow);
 }
 
 /* ---------- Статистика: акцентные числа ---------- */
 .stats h2 {
-    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 120%);
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent-3) 70%, var(--accent) 120%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -103,23 +142,29 @@ body::before {
 .mod-front,
 .music-front {
     box-shadow:
-        0 18px 50px rgba(0, 0, 0, 0.45),
-        0 0 40px var(--accent-glow) !important;
+        0 22px 60px rgba(0, 0, 0, 0.5),
+        0 0 46px var(--accent-glow) !important;
 }
 
-/* Плавный отклик карточек на наведение */
 .highlight.mod:hover,
 .highlight.music:hover {
-    transform: translateY(-4px) scale(1.015);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
 }
 
-/* Картинки-«стопка» серверов: чуть ярче подсветка */
+/* Картинки-«стопка» серверов */
 .other-statuses .images img {
     filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.35))
-            drop-shadow(0 0 14px rgba(151, 71, 255, 0.18));
+            drop-shadow(0 0 14px rgba(151, 71, 255, 0.2));
+    transition: transform .3s ease, filter .3s ease;
+}
+.other-statuses .images img:hover {
+    transform: translateY(-6px) scale(1.04);
+    filter: drop-shadow(0 16px 30px rgba(0,0,0,0.45))
+            drop-shadow(0 0 22px var(--accent-glow));
 }
 
-/* ---------- Видео-демонстрация: рамка в акценте ---------- */
+/* ---------- Видео-демонстрация: акцентная рамка ---------- */
 .music iframe {
     border-radius: 18px;
     box-shadow:
@@ -128,68 +173,379 @@ body::before {
         0 0 50px var(--accent-glow);
 }
 
+/* Плавное появление по скроллу — чуть мягче */
+.animate-on-scroll {
+    transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+}
+
 /* =========================================================
-   ХЕДЕР: акцентная CTA-кнопка «Регистрация»
+   ХЕДЕР
    ========================================================= */
 header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    background: rgba(0, 0, 0, 0.18);
+    border-bottom: 1px solid var(--hairline);
+    background: rgba(10, 9, 16, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
 
-/* Основная кнопка-призыв: фирменный градиент + свечение */
+/* CTA-кнопка «Регистрация»: фирменный градиент + свечение */
 header .button {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    background: var(--grad-accent);
     color: #fff;
     font-weight: 500;
-    box-shadow: 0 6px 20px var(--accent-glow);
+    box-shadow: 0 6px 22px var(--accent-glow);
     transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
-
-/* На градиентной кнопке белая рамка ::before лишняя — гасим её */
-header .button::before {
-    opacity: 0;
-}
-
+header .button::before { opacity: 0; }
 header .button:hover {
     transform: translateY(-1px) scale(1.03);
     filter: brightness(1.08);
-    box-shadow: 0 10px 30px var(--accent-soft);
+    box-shadow: 0 12px 32px var(--accent-soft);
 }
 
-/* Пункты меню: мягкая подсветка при наведении */
+/* Пункты меню: подчёркивание-градиент при наведении */
 header li a {
     position: relative;
     transition: color .2s ease;
 }
-
 header li a::after {
     content: "";
     position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 100%;
-    height: 2px;
+    left: 0; bottom: -6px;
+    width: 100%; height: 2px;
     border-radius: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    background: var(--grad-accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform .25s ease;
 }
+header li a:hover { color: #fff; }
+header li a:hover::after { transform: scaleX(1); }
 
-header li a:hover {
+header .logo-text:hover img { filter: drop-shadow(0 0 10px var(--accent-glow)); }
+
+/* Аватар-чип в хедере профиля */
+.profile-button:hover,
+header .header-actions .highlight:hover {
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+/* =========================================================
+   ФОРМЫ (вход / регистрация)
+   ========================================================= */
+.form-container {
+    background: var(--card-glass);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 0 60px rgba(151,71,255,0.12);
+}
+
+/* Кольцо акцента при фокусе на поле ввода */
+.input-wrapper:focus-within {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 2px var(--accent-soft), 0 10px 26px var(--accent-glow);
+}
+.input-wrapper:focus-within::before { opacity: 0; }
+
+/* Главная кнопка отправки формы — градиент */
+.submit-btn {
+    background: var(--grad-accent) !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    box-shadow: 0 10px 28px var(--accent-glow);
+}
+.submit-btn::before { opacity: 0; }
+.submit-btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.06);
+    box-shadow: 0 14px 36px var(--accent-soft);
+}
+
+/* Чекбокс согласия в акценте */
+.checkbox-group input[type="checkbox"]:checked + label::before {
+    background: var(--grad-accent) !important;
+    border-color: transparent !important;
+    box-shadow: 0 3px 10px var(--accent-glow) !important;
+}
+
+/* Ссылки в формах подсвечиваются акцентом */
+.account a,
+.label-row a,
+.checkbox-group .link {
+    color: var(--accent-3);
+    transition: color .2s ease, text-shadow .2s ease;
+}
+.account a:hover,
+.label-row a:hover,
+.checkbox-group .link:hover {
     color: #fff;
+    text-shadow: 0 0 12px var(--accent-glow);
 }
 
-header li a:hover::after {
-    transform: scaleX(1);
+/* =========================================================
+   ПОКУПКА (тарифы / FAQ / модалка)
+   ========================================================= */
+.pricing-card {
+    background: var(--card-glass);
+    transition: transform .4s cubic-bezier(0.45, 1.45, 0.49, 1.15), box-shadow .4s ease, border-color .4s ease;
+}
+.pricing-card:hover {
+    box-shadow: 0 26px 70px rgba(0,0,0,0.5), 0 0 40px var(--accent-glow);
 }
 
-/* Логотип: лёгкое свечение при наведении */
-header .logo-text:hover img {
-    filter: drop-shadow(0 0 10px var(--accent-glow));
+/* Премиум-тариф: фирменное свечение + лёгкая пульсация рамки */
+.pricing-card.premium {
+    background: linear-gradient(150deg, rgba(151,71,255,0.18) 0%, rgba(79,124,255,0.10) 45%, var(--card-glass) 100%);
+    border: 1px solid var(--accent-soft);
+    box-shadow: 0 0 0 1px rgba(151,71,255,0.25), 0 22px 60px rgba(0,0,0,0.45), 0 0 50px var(--accent-glow);
+    animation: premiumPulse 4s ease-in-out infinite;
+}
+@keyframes premiumPulse {
+    0%, 100% { box-shadow: 0 0 0 1px rgba(151,71,255,0.25), 0 22px 60px rgba(0,0,0,0.45), 0 0 36px var(--accent-glow); }
+    50%      { box-shadow: 0 0 0 1px rgba(151,71,255,0.45), 0 22px 60px rgba(0,0,0,0.45), 0 0 64px var(--accent-glow); }
 }
 
-/* Тосты: цветная полоска прогресса в акценте */
-.toast-progress {
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+.popular-badge {
+    background: var(--grad-accent);
+    box-shadow: 0 6px 18px var(--accent-soft);
+}
+
+/* Цена — акцентный градиент на числе */
+.price .amount {
+    background-image: linear-gradient(120deg, #ffffff 35%, var(--accent-3) 80%, var(--accent) 110%) !important;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+}
+
+/* Галочки фич — фирменный цвет */
+.feature i { color: var(--accent-3) !important; filter: drop-shadow(0 0 6px var(--accent-glow)); }
+.feature.disabled i { color: #ef4444 !important; filter: none; }
+
+/* Кнопки покупки */
+.buy-button {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--hairline);
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+}
+.buy-button:hover {
+    background: rgba(151,71,255,0.14);
+    border-color: var(--accent-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px var(--accent-glow);
+}
+.buy-button.premium-btn {
+    background: var(--grad-accent);
+    border: none;
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+.buy-button.premium-btn:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 14px 40px var(--accent-soft);
+}
+
+/* FAQ-заголовок и карточки */
+.faq-header h2 {
+    background-image: linear-gradient(100deg, #fff 40%, var(--accent-3) 90%) !important;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+}
+.faq-item {
+    background: var(--card-glass);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.faq-item:hover {
+    border-color: var(--accent-soft);
+    transform: translateX(8px);
+    box-shadow: -6px 12px 36px rgba(0,0,0,0.35), 0 0 24px var(--accent-glow);
+}
+
+/* Модалка покупки/ключа */
+.popup-overlay { background: rgba(8, 7, 14, 0.6); }
+.key-popup { box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(151,71,255,0.15); }
+.payment-option-popup input[type="radio"]:checked + .payment-btn {
+    background: rgba(151, 71, 255, 0.28) !important;
+    box-shadow: 0 0 0 1px var(--accent-soft), 0 8px 20px var(--accent-glow);
+}
+.promo-check-btn {
+    background: rgba(151,71,255,0.2);
+    border-color: var(--accent-soft);
+}
+.promo-check-btn:hover {
+    background: var(--grad-accent);
+    border-color: transparent;
+    box-shadow: 0 8px 22px var(--accent-glow);
+}
+.popup-buy {
+    background: var(--grad-accent) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 30px var(--accent-glow);
+}
+.popup-buy::before { opacity: 0; }
+.popup-buy:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.06);
+    box-shadow: 0 14px 40px var(--accent-soft) !important;
+}
+.payment-info-popup i,
+.feature i.ph-check-circle { color: var(--accent-3); }
+
+/* =========================================================
+   ПРОФИЛЬ
+   ========================================================= */
+.profile .box {
+    box-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 0 50px rgba(151,71,255,0.1);
+}
+
+/* Кнопки-действия в профиле: акцентный hover */
+.profile .buttons .highlight {
+    transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+}
+.profile .buttons .highlight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px var(--accent-glow);
+}
+.profile .buttons .highlight .icon {
+    background: var(--grad-accent);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+/* Аватар-кольцо */
+.profile .ava-wrapper {
+    box-shadow: 0 0 0 2px var(--accent-soft), 0 8px 26px var(--accent-glow);
+    border-radius: 50%;
+}
+
+/* Роль/важные значения подсвечены акцентом */
+.profile .role,
+.profile .ram-edit-link,
+.profile .twofa-status {
+    color: var(--accent-3);
+}
+.profile .ram-edit-link:hover { color: #fff; text-shadow: 0 0 10px var(--accent-glow); }
+
+/* Кнопка «Выйти» */
+.profile .quit:hover {
+    box-shadow: 0 10px 26px rgba(233, 58, 87, 0.3);
+    background: rgba(233, 58, 87, 0.12);
+}
+
+/* Таблица конфигов */
+.profile table th {
+    color: var(--text-other-color);
+    border-bottom: 1px solid var(--hairline);
+}
+.profile table tr { transition: background .2s ease; }
+.profile table tbody tr:hover { background: rgba(151,71,255,0.06); }
+
+/* Пагинация: активная страница — градиент */
+.page-btn {
+    transition: all .25s ease;
+    border-radius: 12px;
+}
+.page-btn.active {
+    background: var(--grad-accent) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 6px 18px var(--accent-glow);
+}
+.page-btn:not(.active):hover {
+    background: rgba(151,71,255,0.12);
+    box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+/* Кнопки в попапах профиля */
+.popup-buy,
+.popup-button {
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.popup-button {
+    background: var(--grad-accent) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+.popup-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+/* QR-блок 2FA */
+.twofa-qr-wrapper {
+    box-shadow: 0 0 0 1px var(--accent-soft), 0 0 30px var(--accent-glow);
+    border-radius: 16px;
+}
+
+/* =========================================================
+   ОПЛАТА УСПЕШНА
+   ========================================================= */
+.success-icon {
+    color: var(--accent-3) !important;
+    filter: drop-shadow(0 0 24px var(--accent-glow));
+    animation: successPop .6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes successPop {
+    0%   { transform: scale(0.4); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
+}
+.success-button {
+    background: var(--grad-accent) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 10px 28px var(--accent-glow);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.success-button:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.06);
+    box-shadow: 0 14px 38px var(--accent-soft);
+}
+
+/* =========================================================
+   ФУТЕР
+   ========================================================= */
+.footer {
+    position: relative;
+    border-top: 1px solid var(--hairline);
+}
+.footer::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, 80%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
+}
+.footer-section h3 {
+    background: linear-gradient(120deg, #fff, var(--accent-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.footer-section a {
+    transition: color .2s ease, padding-left .2s ease, text-shadow .2s ease;
+}
+.footer-section a:hover {
+    color: #fff;
+    padding-left: 4px;
+    text-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* =========================================================
+   ТОСТЫ
+   ========================================================= */
+.toast-progress { background: var(--grad-accent); }
+.toast-icon { background: rgba(151,71,255,0.18); }
+
+/* =========================================================
+   АДАПТИВ: ослабляем тяжёлые эффекты на мобильных
+   ========================================================= */
+@media (max-width: 620px) {
+    body::after { display: none; }
+    .pricing-card.premium { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    .pricing-card.premium,
+    .success-icon { animation: none !important; }
+    * { scroll-behavior: auto; }
 }

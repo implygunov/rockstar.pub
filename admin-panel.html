@@ -4,287 +4,527 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main/index.css">
-    <link rel="stylesheet" href="css/main/profile.css">
     <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/main/theme.css">
     <script defer src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
     <script defer src="js/header.js"></script>
-    <title>Админ-панель</title>
+    <title>Админ-панель — Kazahstan Client</title>
     <script>
         // Определяем API_BASE_URL
         window.API_BASE_URL = window.location.origin + '/api/v1';
     </script>
     <style>
-        .admin-container {
-            padding: 120px 12%;
+        :root {
+            --ad-bg-card: rgba(20, 18, 30, 0.5);
+            --ad-bg-soft: rgba(255, 255, 255, 0.04);
+            --ad-line: rgba(255, 255, 255, 0.08);
+        }
+
+        body { min-height: 100vh; }
+
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 264px 1fr;
+            min-height: 100vh;
+        }
+
+        /* ---------- Сайдбар ---------- */
+        .admin-sidebar {
+            position: sticky;
+            top: 0;
+            align-self: start;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 26px 18px;
+            background: rgba(10, 9, 16, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--ad-line);
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px 22px;
+            color: var(--text-color);
+            font-size: 19px;
+            font-weight: 600;
+        }
+        .admin-brand img { width: 30px; height: 30px; object-fit: contain; }
+        .admin-brand .badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            color: #fff;
+            background: var(--grad-accent);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 16px;
+            border-radius: 14px;
+            color: var(--text-other-color);
+            font-size: 15.5px;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: all .22s ease;
+        }
+        .nav-link i { font-size: 20px; }
+        .nav-link:hover {
+            color: #fff;
+            background: var(--ad-bg-soft);
+            border-color: var(--ad-line);
+        }
+        .nav-link.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(151,71,255,0.22), rgba(79,124,255,0.14));
+            border-color: var(--accent-soft);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .sidebar-foot {
+            margin-top: auto;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            font-size: 12.5px;
+            color: var(--text-desc);
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .sidebar-foot b { color: var(--accent-3); font-weight: 600; }
+
+        /* ---------- Контент ---------- */
+        .admin-main {
+            padding: 38px clamp(20px, 4vw, 56px) 60px;
             color: var(--text-color);
         }
-        .admin-header {
-            text-align: center;
-            margin-bottom: 40px;
+
+        .admin-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 34px;
+            flex-wrap: wrap;
         }
-        .admin-header h1 {
-            font-size: 48px;
-            font-weight: 500;
-            margin-bottom: 8px;
+        .admin-topbar .title h1 {
+            font-size: 34px;
+            font-weight: 600;
+            letter-spacing: -.5px;
+            background: linear-gradient(120deg, #fff 40%, var(--accent-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .session-info {
-            font-size: 14px;
+        .admin-topbar .title p {
             color: var(--text-desc);
+            font-size: 14.5px;
+            margin-top: 4px;
         }
+        .session-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 30px;
+            background: var(--ad-bg-card);
+            border: 1px solid var(--ad-line);
+            font-size: 13px;
+            color: var(--text-other-color);
+        }
+        .session-chip .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 10px #34d399;
+            animation: livePulse 1.8s ease-in-out infinite;
+        }
+        @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+        .session-chip code { color: var(--accent-3); font-family: monospace; }
+
+        /* ---------- Карточки статистики ---------- */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 14px;
         }
         .stat-card {
-            background: rgba(20, 20, 20, 0.35);
-            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            background: var(--ad-bg-card);
+            border-radius: 22px;
             padding: 24px;
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--ad-line);
+            backdrop-filter: blur(20px);
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
         }
-        .stat-value {
-            font-size: 36px;
-            font-weight: 600;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-soft);
+            box-shadow: 0 18px 50px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
+        }
+        .stat-card .stat-ico {
+            width: 46px; height: 46px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 14px;
+            font-size: 22px; color: #fff;
+            background: var(--grad-accent);
+            box-shadow: 0 8px 20px var(--accent-glow);
+            margin-bottom: 18px;
+        }
+        .stat-card .stat-value {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1;
             margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, var(--accent-3));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
         }
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-desc);
+        .stat-card .stat-label { font-size: 14px; color: var(--text-desc); }
+        .stat-card .glow {
+            position: absolute; inset: auto -40% -60% auto;
+            width: 180px; height: 180px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ---------- Секции ---------- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 22px;
+            margin-top: 22px;
         }
         .admin-section {
-            background: rgba(20, 20, 20, 0.35);
+            background: var(--ad-bg-card);
             border-radius: 24px;
-            padding: 32px;
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--ad-line);
+        }
+        .admin-section .sec-head {
+            display: flex; align-items: center; gap: 12px;
             margin-bottom: 24px;
         }
-        .admin-section h2 {
-            font-size: 28px;
-            font-weight: 500;
-            margin-bottom: 24px;
+        .admin-section .sec-head .ico {
+            width: 38px; height: 38px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 11px; font-size: 19px; color: #fff;
+            background: linear-gradient(135deg, rgba(151,71,255,0.3), rgba(79,124,255,0.2));
+            border: 1px solid var(--accent-soft);
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .admin-section h2 { font-size: 21px; font-weight: 600; }
+
+        .form-group { margin-bottom: 18px; }
         .form-group label {
-            display: block;
-            font-size: 14px;
-            color: var(--text-other-color);
-            margin-bottom: 8px;
+            display: block; font-size: 13.5px;
+            color: var(--text-other-color); margin-bottom: 9px; font-weight: 500;
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 14px 16px;
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            border-radius: 13px;
             color: var(--text-color);
-            font-size: 16px;
+            font-size: 15px;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
         }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+            background: rgba(151,71,255,0.06);
+            box-shadow: 0 0 0 3px rgba(151,71,255,0.15);
+        }
+        .form-group select option { background: #16131f; color: #fff; }
+
         .btn {
-            padding: 14px 28px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: var(--text-color);
-            font-size: 16px;
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 13px 24px;
+            background: var(--grad-accent);
+            border: none;
+            border-radius: 13px;
+            color: #fff;
+            font-size: 15px; font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 22px var(--accent-glow);
+            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
         }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
+        .btn:hover { transform: translateY(-2px); filter: brightness(1.07); box-shadow: 0 12px 30px var(--accent-soft); }
+        .btn.ghost {
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            box-shadow: none;
+            color: var(--text-color);
         }
-        .keys-output, .promocodes-list {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            max-height: 300px;
-            overflow-y: auto;
+        .btn.ghost:hover { border-color: var(--accent-soft); background: rgba(151,71,255,0.1); box-shadow: 0 6px 18px var(--accent-glow); }
+        .btn-small { padding: 9px 16px; font-size: 13.5px; border-radius: 10px; }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.16);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #ff8e8e;
+            box-shadow: none;
         }
-        .key-item, .promo-item {
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-family: monospace;
-        }
-        .promo-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .promo-info {
-            display: flex;
-            gap: 16px;
-            font-size: 14px;
-        }
-        .users-list {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .user-item {
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .user-info {
-            flex: 1;
-        }
-        .user-name {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-        .user-email {
-            font-size: 14px;
-            color: var(--text-desc);
-        }
-        .user-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .user-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .user-field {
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.28); box-shadow: 0 6px 18px rgba(239,68,68,0.3); filter: none; }
+
+        /* списки */
+        .keys-output, .promocodes-list, .users-list {
+            margin-top: 18px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 10px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
-        .user-field label {
-            font-size: 12px;
+        .key-item {
+            padding: 12px 16px;
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            border-left: 3px solid var(--accent);
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--accent-3);
+            word-break: break-all;
+        }
+        .promo-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px;
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            border-radius: 12px;
+        }
+        .promo-item strong { font-size: 16px; color: #fff; }
+        .promo-info { display: flex; gap: 14px; font-size: 13.5px; align-items: center; color: var(--text-other-color); }
+        .promo-info span:first-child { color: var(--accent-3); font-weight: 600; }
+
+        .empty-hint {
+            text-align: center;
             color: var(--text-desc);
+            font-size: 14px;
+            padding: 30px 10px;
         }
+
+        /* пользователи */
+        .user-item {
+            padding: 20px;
+            background: var(--ad-bg-soft);
+            border: 1px solid var(--ad-line);
+            border-radius: 16px;
+            transition: border-color .22s ease, box-shadow .22s ease;
+        }
+        .user-item:hover { border-color: var(--accent-soft); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .user-header {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .user-name { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+        .user-email { font-size: 13.5px; color: var(--text-desc); }
+        .user-actions { display: flex; gap: 8px; }
+        .user-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+        }
+        .user-field { display: flex; flex-direction: column; gap: 6px; }
+        .user-field label { font-size: 12px; color: var(--text-desc); }
         .user-field input, .user-field select {
-            padding: 8px 12px;
+            padding: 10px 12px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            border: 1px solid var(--ad-line);
+            border-radius: 10px;
             color: var(--text-color);
             font-size: 14px;
+            transition: border-color .2s ease;
         }
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.5);
-        }
-        .btn-danger:hover {
-            background: rgba(239, 68, 68, 0.3);
+        .user-field input:focus, .user-field select:focus { outline: none; border-color: var(--accent-soft); }
+        .user-field select option { background: #16131f; }
+
+        /* секция-якорь со смещением под отступ */
+        .anchor { scroll-margin-top: 24px; }
+
+        @media (max-width: 900px) {
+            .admin-layout { grid-template-columns: 1fr; }
+            .admin-sidebar {
+                position: static; height: auto; flex-direction: row;
+                flex-wrap: wrap; align-items: center;
+                border-right: none; border-bottom: 1px solid var(--ad-line);
+            }
+            .admin-brand { padding: 6px 12px; }
+            .sidebar-foot { display: none; }
+            .nav-link { padding: 10px 14px; }
         }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>🔐 Админ-панель</h1>
-            <p class="session-info">Сессия: <span id="sessionUrl"></span></p>
-        </div>
+    <div class="admin-layout">
+        <!-- Сайдбар -->
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <img src="/img/logo.png" alt="">
+                Kazahstan
+                <span class="badge">ADMIN</span>
+            </div>
+            <a class="nav-link active" href="#overview"><i class="ph-fill ph-squares-four"></i>Обзор</a>
+            <a class="nav-link" href="#keys"><i class="ph-fill ph-key"></i>Ключи</a>
+            <a class="nav-link" href="#promo"><i class="ph-fill ph-ticket"></i>Промокоды</a>
+            <a class="nav-link" href="#users"><i class="ph-fill ph-users-three"></i>Пользователи</a>
+            <a class="nav-link" href="/" target="_blank"><i class="ph-fill ph-globe"></i>На сайт</a>
+            <div class="sidebar-foot">
+                Сессия<br><b id="sessionUrl"></b>
+            </div>
+        </aside>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="statUsers">0</div>
-                <div class="stat-label">Пользователей</div>
+        <!-- Основной контент -->
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <div class="title">
+                    <h1>Панель управления</h1>
+                    <p>Управляйте ключами, промокодами и пользователями</p>
+                </div>
+                <div class="session-chip">
+                    <span class="dot"></span> Сессия активна · <code id="sessionUrlChip"></code>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statKeys">0</div>
-                <div class="stat-label">Неиспользованных ключей</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statInvoices">0</div>
-                <div class="stat-label">Оплаченных заказов</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statRevenue">0₽</div>
-                <div class="stat-label">Общий доход</div>
-            </div>
-        </div>
 
-        <div class="admin-section">
-            <h2>Генерация ключей активации</h2>
-            <div class="form-group">
-                <label>Роль</label>
-                <select id="keyRole">
-                    <option value="beta">Beta</option>
-                    <option value="alpha">Alpha</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="cracker">Cracker</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Количество</label>
-                <input type="number" id="keyCount" value="1" min="1" max="100">
-            </div>
-            <div class="form-group">
-                <label>Длительность (дней)</label>
-                <input type="number" id="keyDuration" value="30" min="1">
-            </div>
-            <button class="btn" onclick="generateKeys()">Сгенерировать ключи</button>
-            <div class="keys-output" id="keysOutput" style="display: none;"></div>
-        </div>
+            <!-- Статистика -->
+            <section id="overview" class="anchor">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="stat-ico"><i class="ph-fill ph-users-three"></i></div>
+                        <div class="stat-value" id="statUsers">0</div>
+                        <div class="stat-label">Пользователей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="stat-ico"><i class="ph-fill ph-key"></i></div>
+                        <div class="stat-value" id="statKeys">0</div>
+                        <div class="stat-label">Неиспользованных ключей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="stat-ico"><i class="ph-fill ph-receipt"></i></div>
+                        <div class="stat-value" id="statInvoices">0</div>
+                        <div class="stat-label">Оплаченных заказов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="stat-ico"><i class="ph-fill ph-currency-rub"></i></div>
+                        <div class="stat-value" id="statRevenue">0₽</div>
+                        <div class="stat-label">Общий доход</div>
+                    </div>
+                </div>
+            </section>
 
-        <div class="admin-section">
-            <h2>Создание промокода</h2>
-            <div class="form-group">
-                <label>Код промокода</label>
-                <input type="text" id="promoCode" placeholder="SALE50">
-            </div>
-            <div class="form-group">
-                <label>Скидка (%)</label>
-                <input type="number" id="promoDiscount" value="10" min="1" max="100">
-            </div>
-            <div class="form-group">
-                <label>Макс. использований (0 = безлимит)</label>
-                <input type="number" id="promoMaxUses" value="0" min="0">
-            </div>
-            <div class="form-group">
-                <label>Срок действия (необязательно)</label>
-                <input type="datetime-local" id="promoExpires">
-            </div>
-            <button class="btn" onclick="createPromocode()">Создать промокод</button>
-        </div>
+            <div class="grid-2">
+                <!-- Генерация ключей -->
+                <div class="admin-section anchor" id="keys">
+                    <div class="sec-head">
+                        <span class="ico"><i class="ph-fill ph-key"></i></span>
+                        <h2>Генерация ключей</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Роль</label>
+                        <select id="keyRole">
+                            <option value="beta">Beta</option>
+                            <option value="alpha">Alpha</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="cracker">Cracker</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Количество</label>
+                        <input type="number" id="keyCount" value="1" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Длительность (дней)</label>
+                        <input type="number" id="keyDuration" value="30" min="1">
+                    </div>
+                    <button class="btn" onclick="generateKeys()"><i class="ph-bold ph-sparkle"></i>Сгенерировать</button>
+                    <div class="keys-output" id="keysOutput" style="display: none;"></div>
+                </div>
 
-        <div class="admin-section">
-            <h2>Активные промокоды</h2>
-            <div class="promocodes-list" id="promocodesList"></div>
-        </div>
+                <!-- Создание промокода -->
+                <div class="admin-section anchor" id="promo">
+                    <div class="sec-head">
+                        <span class="ico"><i class="ph-fill ph-ticket"></i></span>
+                        <h2>Создание промокода</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Код промокода</label>
+                        <input type="text" id="promoCode" placeholder="SALE50">
+                    </div>
+                    <div class="form-group">
+                        <label>Скидка (%)</label>
+                        <input type="number" id="promoDiscount" value="10" min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Макс. использований (0 = безлимит)</label>
+                        <input type="number" id="promoMaxUses" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Срок действия (необязательно)</label>
+                        <input type="datetime-local" id="promoExpires">
+                    </div>
+                    <button class="btn" onclick="createPromocode()"><i class="ph-bold ph-plus"></i>Создать промокод</button>
+                </div>
+            </div>
 
-        <div class="admin-section">
-            <h2>Управление пользователями</h2>
-            <div class="users-list" id="usersList"></div>
-        </div>
+            <!-- Активные промокоды -->
+            <div class="admin-section anchor" id="promo-list" style="margin-top: 22px;">
+                <div class="sec-head">
+                    <span class="ico"><i class="ph-fill ph-tag"></i></span>
+                    <h2>Активные промокоды</h2>
+                </div>
+                <div class="promocodes-list" id="promocodesList"></div>
+            </div>
+
+            <!-- Пользователи -->
+            <div class="admin-section anchor" id="users" style="margin-top: 22px;">
+                <div class="sec-head">
+                    <span class="ico"><i class="ph-fill ph-users-three"></i></span>
+                    <h2>Управление пользователями</h2>
+                </div>
+                <div class="users-list" id="usersList"></div>
+            </div>
+        </main>
     </div>
 
     <script>
         const sessionUrl = window.location.pathname.replace('.html', '').substring(1);
         document.getElementById('sessionUrl').textContent = sessionUrl;
+        const chip = document.getElementById('sessionUrlChip');
+        if (chip) chip.textContent = sessionUrl;
+
+        // Подсветка активного пункта меню при скролле
+        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
 
         // Загрузка статистики
         async function loadStats() {
             try {
                 const response = await fetch(`${window.API_BASE_URL}/admin/stats/${sessionUrl}`);
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     document.getElementById('statUsers').textContent = data.users;
                     document.getElementById('statKeys').textContent = data.unusedKeys;
@@ -313,11 +553,11 @@
 
                 if (response.ok && data.success) {
                     const output = document.getElementById('keysOutput');
-                    output.style.display = 'block';
-                    output.innerHTML = data.keys.map(key => 
+                    output.style.display = 'flex';
+                    output.innerHTML = data.keys.map(key =>
                         `<div class="key-item">${key}</div>`
                     ).join('');
-                    
+
                     if (window.__toast) {
                         window.__toast(`Сгенерировано ${data.keys.length} ключей`, 'success');
                     }
@@ -342,7 +582,7 @@
             const expires = document.getElementById('promoExpires').value;
 
             if (!code) {
-                alert('Введите код промокода');
+                if (window.__toast) { window.__toast('Введите код промокода', 'error'); } else { alert('Введите код промокода'); }
                 return;
             }
 
@@ -387,6 +627,10 @@
 
                 if (response.ok) {
                     const list = document.getElementById('promocodesList');
+                    if (!data.promocodes.length) {
+                        list.innerHTML = '<div class="empty-hint">Промокодов пока нет</div>';
+                        return;
+                    }
                     list.innerHTML = data.promocodes.map(promo => `
                         <div class="promo-item">
                             <strong>${promo.code}</strong>
@@ -411,6 +655,10 @@
 
                 if (response.ok) {
                     const list = document.getElementById('usersList');
+                    if (!data.users.length) {
+                        list.innerHTML = '<div class="empty-hint">Пользователей пока нет</div>';
+                        return;
+                    }
                     list.innerHTML = data.users.map(user => `
                         <div class="user-item">
                             <div class="user-header">
@@ -419,8 +667,8 @@
                                     <div class="user-email">${user.email}</div>
                                 </div>
                                 <div class="user-actions">
-                                    <button class="btn btn-small" onclick="saveUser(${user.id})">Сохранить</button>
-                                    <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id}, '${user.login}')">Удалить</button>
+                                    <button class="btn btn-small" onclick="saveUser(${user.id})"><i class="ph-bold ph-check"></i>Сохранить</button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id}, '${user.login}')"><i class="ph-bold ph-trash"></i>Удалить</button>
                                 </div>
                             </div>
                             <div class="user-details">
