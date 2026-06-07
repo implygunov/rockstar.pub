@@ -74,7 +74,11 @@ initDatabase()
     const sessionUrl = crypto.randomBytes(8).toString('hex');
 
     const expiresAt = new Date();
+<<<<<<< HEAD
     expiresAt.setHours(expiresAt.getHours() + 120);
+=======
+    expiresAt.setHours(expiresAt.getHours() + 24);
+>>>>>>> d0dee490ad0d08539db0b57de10a66c461b9cca4
 
     const expiresAtFormatted = expiresAt
       .toISOString()
