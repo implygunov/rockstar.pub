@@ -88,78 +88,68 @@ function closeModal() {
 }
 
 async function submitPurchase() {
-    const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
-    
-    if (selectedPayment === 'card' || selectedPayment === 'qiwi') {
+    // Сейчас доступна только оплата криптой (CryptoBot)
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
         if (window.__toast) {
-            window.__toast('Временно недоступно', 'error', 3000);
-        } else {
-            alert('Временно недоступно');
+            window.__toast('Необходимо авторизоваться', 'error', 3000);
         }
-    } else if (selectedPayment === 'crypto') {
-        // Проверяем авторизацию
-        const token = localStorage.getItem('jwtToken');
-        if (!token) {
+        setTimeout(() => {
+            window.location.href = '/signin.html';
+        }, 1000);
+        return;
+    }
+
+    try {
+        if (window.__toast) {
+            window.__toast('Создание инвойса...', 'info', 2000);
+        }
+
+        const promocode = document.getElementById('promoInput').value.trim();
+
+        const response = await fetch(`${window.API_BASE_URL}/payment/create-invoice`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                planType: currentPlanData.planType,
+                amount: currentPlanData.amount,
+                promocode: promocode || null
+            })
+        });
+
+        const data = await response.json();
+
+        console.log('Server response:', data);
+
+        if (response.ok && data.success) {
             if (window.__toast) {
-                window.__toast('Необходимо авторизоваться', 'error', 3000);
+                window.__toast('Перенаправление на оплату...', 'success', 2000);
             }
+
+            // Закрываем модалку
+            closeModal();
+
+            // Открываем страницу оплаты
             setTimeout(() => {
-                window.location.href = '/signin.html';
-            }, 1000);
-            return;
+                window.open(data.payUrl, '_blank');
+
+                // Начинаем проверять статус платежа
+                checkPaymentStatus(data.invoiceId);
+            }, 500);
+        } else {
+            throw new Error(data.error || 'Ошибка создания инвойса');
         }
 
-        try {
-            if (window.__toast) {
-                window.__toast('Создание инвойса...', 'info', 2000);
-            }
-
-            const promocode = document.getElementById('promoInput').value.trim();
-
-            const response = await fetch(`${window.API_BASE_URL}/payment/create-invoice`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    planType: currentPlanData.planType,
-                    amount: currentPlanData.amount,
-                    promocode: promocode || null
-                })
-            });
-
-            const data = await response.json();
-
-            console.log('Server response:', data);
-
-            if (response.ok && data.success) {
-                if (window.__toast) {
-                    window.__toast('Перенаправление на оплату...', 'success', 2000);
-                }
-                
-                // Закрываем модалку
-                closeModal();
-                
-                // Открываем страницу оплаты
-                setTimeout(() => {
-                    window.open(data.payUrl, '_blank');
-                    
-                    // Начинаем проверять статус платежа
-                    checkPaymentStatus(data.invoiceId);
-                }, 500);
-            } else {
-                throw new Error(data.error || 'Ошибка создания инвойса');
-            }
-
-        } catch (error) {
-            console.error('Payment error:', error);
-            if (window.__toast) {
-                window.__toast(error.message, 'error', 3000);
-            } else {
-                alert(error.message);
-            }
+    } catch (error) {
+        console.error('Payment error:', error);
+        if (window.__toast) {
+            window.__toast(error.message, 'error', 3000);
+        } else {
+            alert(error.message);
         }
     }
 }

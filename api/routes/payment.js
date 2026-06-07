@@ -6,8 +6,12 @@ const https = require('https');
 const { getDb } = require('../database/db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
-const CRYPTOBOT_TOKEN = '504363:AAHYQ61JqLa3tWGx9G2zrJiCMp5C2JdIoCB';
-const CRYPTOBOT_API = 'https://pay.crypt.bot/api';
+const CRYPTOBOT_TOKEN = process.env.CRYPTOBOT_TOKEN;
+const CRYPTOBOT_API = process.env.CRYPTOBOT_API || 'https://pay.crypt.bot/api';
+
+if (!CRYPTOBOT_TOKEN) {
+  console.warn('⚠️  CRYPTOBOT_TOKEN не задан в .env — оплата криптой работать не будет.');
+}
 
 // Middleware для проверки токена
 const authMiddleware = (req, res, next) => {
